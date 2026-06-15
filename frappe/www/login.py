@@ -155,13 +155,14 @@ def send_login_link(email: str):
 
 	subject = _("Login To {0}").format(app_name)
 
-	frappe.sendmail(
-		subject=subject,
-		recipients=email,
-		template="login_with_email_link",
-		args={"link": link, "minutes": expiry, "app_name": app_name},
-		now=True,
-	)
+	# Email sending disabled - external login system in use
+	# frappe.sendmail(
+	# 	subject=subject,
+	# 	recipients=email,
+	# 	template="login_with_email_link",
+	# 	args={"link": link, "minutes": expiry, "app_name": app_name},
+	# 	now=True,
+	# )
 
 
 def _generate_temporary_login_link(email: str, expiry: int):

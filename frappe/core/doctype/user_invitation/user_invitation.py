@@ -54,13 +54,14 @@ class UserInvitation(Document):
 		self.status = "Cancelled"
 		self.save()
 		email_title = self._get_email_title()
-		frappe.sendmail(
-			recipients=self.email,
-			subject=_("Invitation to join {0} cancelled").format(email_title),
-			template="user_invitation_cancelled",
-			args={"title": email_title},
-			now=True,
-		)
+		# Email sending disabled - external login system in use
+		# frappe.sendmail(
+		# 	recipients=self.email,
+		# 	subject=_("Invitation to join {0} cancelled").format(email_title),
+		# 	template="user_invitation_cancelled",
+		# 	args={"title": email_title},
+		# 	now=True,
+		# )
 		return True
 
 	@frappe.whitelist()
@@ -71,13 +72,14 @@ class UserInvitation(Document):
 		self.save()
 		email_title = self._get_email_title()
 		invited_by_user = frappe.get_doc("User", self.invited_by)
-		frappe.sendmail(
-			recipients=invited_by_user.email,
-			subject=_("Invitation to join {0} expired").format(email_title),
-			template="user_invitation_expired",
-			args={"title": email_title},
-			now=False,
-		)
+		# Email sending disabled - external login system in use
+		# frappe.sendmail(
+		# 	recipients=invited_by_user.email,
+		# 	subject=_("Invitation to join {0} expired").format(email_title),
+		# 	template="user_invitation_expired",
+		# 	args={"title": email_title},
+		# 	now=False,
+		# )
 
 	def _validate_invite(self):
 		self._validate_app_name()
@@ -108,13 +110,14 @@ class UserInvitation(Document):
 			f"/api/method/frappe.core.api.user_invitation.accept_invitation?key={key}"
 		)
 		email_title = self._get_email_title()
-		frappe.sendmail(
-			recipients=self.email,
-			subject=_("You've been invited to join {0}").format(email_title),
-			template="user_invitation",
-			args={"title": email_title, "invite_link": invite_link},
-			now=True,
-		)
+		# Email sending disabled - external login system in use
+		# frappe.sendmail(
+		# 	recipients=self.email,
+		# 	subject=_("You've been invited to join {0}").format(email_title),
+		# 	template="user_invitation",
+		# 	args={"title": email_title, "invite_link": invite_link},
+		# 	now=True,
+		# )
 		self.db_set("email_sent_at", frappe.utils.now())
 		return key
 
