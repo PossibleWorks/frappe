@@ -561,17 +561,18 @@ class User(Document):
 			subject = email_template.get("subject")
 			content = email_template.get("message")
 
-		frappe.sendmail(
-			recipients=self.email,
-			sender=sender,
-			subject=subject,
-			template=template if not custom_template else None,
-			content=content if custom_template else None,
-			args=args,
-			header=[subject, "green"],
-			delayed=(not now) if now is not None else self.flags.delay_emails,
-			retry=3,
-		)
+		# Email sending disabled - external login system in use
+		# frappe.sendmail(
+		# 	recipients=self.email,
+		# 	sender=sender,
+		# 	subject=subject,
+		# 	template=template if not custom_template else None,
+		# 	content=content if custom_template else None,
+		# 	args=args,
+		# 	header=[subject, "green"],
+		# 	delayed=(not now) if now is not None else self.flags.delay_emails,
+		# 	retry=3,
+		# )
 
 	def on_trash(self):
 		frappe.clear_cache(user=self.name)
