@@ -1,5 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+import time
 from datetime import timedelta
 
 import frappe
@@ -162,7 +163,16 @@ def flush():
 
 
 def get_queue():
-	batch_size = cint(frappe.conf.email_queue_batch_size) or 500
+	max_per_minute = cint(frappe.conf.get("email_rate_limit_per_minute"))
+	if max_per_minute:
+		window_key = f"email_rate:{int(time.time() // 60)}"
+		sent_this_minute = cint(frappe.cache().get_value(window_key) or 0)
+		if sent_this_minute >= max_per_minute:
+			return []
+		batch_size = max_per_minute - sent_this_minute
+		frappe.cache().set_value(window_key, sent_this_minute + batch_size, expires_in_sec=120)
+	else:
+		batch_size = cint(frappe.conf.email_queue_batch_size) or 500
 
 	return frappe.db.sql(
 		f"""select
